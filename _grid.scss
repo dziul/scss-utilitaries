@@ -1,0 +1,39 @@
+$grid-cols: 12;
+$gutter: 8;
+
+%common {
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.container {
+  @extend %common;
+  display: block;
+  margin: 0 auto;
+  padding: 0 ($gutter + px);
+  @include device-up('lg') {
+    max-width: 1280px;
+  }
+}
+
+.grid {
+  @extend %common;
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 -#{$gutter + px};
+
+  [class*='col-'] {
+    @extend %common;
+    padding: 0 ($gutter + px);
+  }
+
+  .col-auto {
+    flex-basis: 0;
+    flex-grow: 1;
+  }
+  @for $i from 1 through $grid-cols {
+    .col-#{$i} {
+      flex-basis: (100 / ($grid-cols / $i)) * 1%;
+    }
+  }
+}

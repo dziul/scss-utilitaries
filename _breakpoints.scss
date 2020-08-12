@@ -1,0 +1,37 @@
+$breakpoits: (
+  xs: 360px,
+  sm: 768px,
+  md: 1024px,
+  lg: 1280px,
+  xl: 1600px,
+);
+
+@mixin device-up($breakpoint) {
+  $size: get-breakpoint($breakpoint);
+  @media (min-width: $size) {
+    @content;
+  }
+}
+
+@mixin device-down($breakpoint) {
+  $size: get-breakpoint($breakpoint);
+  @media (max-width: ($size*1)-1px) {
+    @content;
+  }
+}
+
+@mixin device-between($min, $max) {
+  $sizeMin: get-breakpoint($min);
+  $sizeMax: get-breakpoint($max);
+  @media (min-width: $sizeMin) and (max-width: ($sizeMax*1)-1px) {
+    @content;
+  }
+}
+
+@function get-breakpoint($id) {
+  @if map-has-key($breakpoits, $id) {
+    @return map-get($breakpoits, $id);
+  }
+
+  @error "Sorry, but `#{$id}` is not a valid value for $breakpoint.";
+}

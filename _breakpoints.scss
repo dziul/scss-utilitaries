@@ -6,32 +6,60 @@ $breakpoits: (
   xl: 1600px,
 );
 
-@mixin device-up($breakpoint) {
+$orientations: all, portrait, landscape;
+
+@mixin device-up($breakpoint, $orientation: null) {
   $size: get-breakpoint($breakpoint);
-  @media (min-width: $size) {
+  $mediaQuery: 'screen and (min-width: #{$size})';
+  @if $orientation {
+    $mediaQuery: '#{$mediaQuery} and (orientation: #{get-orientation($orientation)})';
+  }
+  @media #{$mediaQuery} {
     @content;
   }
 }
 
-@mixin device-down($breakpoint) {
-  $size: get-breakpoint($breakpoint);
-  @media (max-width: ($size*1)-1px) {
+@mixin device-down($breakpoint, $orientation: null) {
+  $size: (get-breakpoint($breakpoint) + 0)-1px;
+  $mediaQuery: 'screen and (max-width: #{$size})';
+  @if $orientation {
+    $mediaQuery: '#{$mediaQuery} and (orientation: #{get-orientation($orientation)})';
+  }
+  @media #{$mediaQuery} {
     @content;
   }
 }
 
-@mixin device-between($min, $max) {
-  $sizeMin: get-breakpoint($min);
-  $sizeMax: get-breakpoint($max);
-  @media (min-width: $sizeMin) and (max-width: ($sizeMax*1)-1px) {
+@mixin device-between($breakpointMin, $breakpointMax, $orientation: null) {
+  $sizeMin: get-breakpoint($breakpointMin);
+  $sizeMax: (get-breakpoint($breakpointMax) + 0)-1px;
+
+  $mediaQuery: 'screen and (min-width: #{$sizeMin}) and (max-width: #{$sizeMax})';
+  @if $orientation {
+    $mediaQuery: '#{$mediaQuery} and (orientation: #{get-orientation($orientation)})';
+  }
+  @media #{$mediaQuery} {
     @content;
   }
 }
 
-@function get-breakpoint($id) {
-  @if map-has-key($breakpoits, $id) {
-    @return map-get($breakpoits, $id);
+@mixin device-landscape {
+  @media screen and (orientation: landscape) {
+    @content;
   }
+}
 
-  @error "Sorry, but `#{$id}` is not a valid value for $breakpoint.";
+@function get-breakpoint($key) {
+  @if map.has-key($breakpoints, $key) {
+    @return map.get($breakpoints, $key);
+  }
+  @error "Sorry, but `#{$key}` is not a valid value for $breakpoints `#{map.keys($breakpoints)}`";
+}
+
+@function get-orientation($key) {
+  $key: list.index($orientations, $key);
+  @if $key {
+    @return list.nth($orientations, $key);
+  }
+  @error "Sorry, but `#{$key}` is not a valid value for $orientations `#{$orientations}`";
 }

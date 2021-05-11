@@ -7,3 +7,17 @@ body {
 	box-sizing: border-box;
 	-webkit-tap-highlight-color: transparent;
 }
+
+// [ref](https://github.com/angular/components/blob/master/src/cdk/a11y/a11y.md#focusmonitor)
+:focus {
+	outline: none;
+	box-shadow: 0 0 0 0.075rem #fff, 0 0 0 0.25rem $color-sup-blue;
+}
+
+.cdk-program-focused,
+.cdk-mouse-focused,
+.cdk-touch-focused {
+	:focus {
+		box-shadow: none;
+	}
+}
